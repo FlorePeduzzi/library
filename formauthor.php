@@ -1,20 +1,24 @@
 <?php
 $name=$_POST['nom'];
+$bio=$_POST['bio'];
 $pdo = new \PDO('mysql:host=localhost;dbname=library', 'root');
 
-$statement=$pdo->prepare("INSERT INTO author(name) VALUES (:name)");
+$check_statement = $pdo->prepare("SELECT COUNT(*) FROM author WHERE name = :name");
+$check_statement->bindValue(':name', $name, \PDO::PARAM_STR);
+$check_statement->execute();
+$count = $check_statement->fetchColumn();
+
+if ($count > 0) {
+    echo "Cet auteur existe déjà dans la bibliothèque";
+    exit;  
+}
+
+$statement=$pdo->prepare("INSERT INTO author(name, bio) VALUES (:name, :bio)");
 $statement->bindValue(':name',$name, \PDO::PARAM_STR);
+$statement->bindValue(':bio',$bio, \PDO::PARAM_STR);
 $statement->execute();
 
-
-var_dump($_POST);
 ?>
-
 <?php
-$name=$_POST['nom'];
-$chaineNom = strlen('nom');
-if($chaineNom >80)
-    echo "Erreur le nombre de caractères correspondant au nom de l'auteur est trop long";
+header("location:author.php");
 ?>
-
-Vous ajoutez l'auteur <?=$_POST['nom'];?>.

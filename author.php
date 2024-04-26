@@ -4,35 +4,34 @@ include "header.php";
 
 
 $pdo = new \PDO('mysql:host=localhost;dbname=library', 'root');
-$statement=$pdo->query("select * from author");
-$author=$statement->fetchAll(PDO::FETCH_ASSOC);
+$statement = $pdo->prepare("SELECT * FROM author");
+$statement->execute();
+$author = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-echo "<pre>";
-var_dump($author);
-echo "</pre>";
 ?>
 
-<hr>
-<h1>Liste des auteurs</h1>
 
-<?php
+<body>
+    <h1 class="text-center mt-5">Liste des auteurs</h1>
+    <a href="add_author.php" class="btn btn-outline-secondary" style="margin-left:30px;">Ajouter un nouvel auteur</a>
 
-foreach ($author as $oneauthor){ ?>
-    <a href="detailauthor.php?id=<?=$oneauthor['idauthor']?>">
-        <?=$oneauthor['name']?>
-        </a>&nbsp;<a href="deleteauthor.php?id=<?=$oneauthor['idauthor']?>">supprimer</a>
-        &nbsp;<a href="modifyauthor.php?id=<?=$oneauthor['idauthor']?>">modifier</a><br>
-<?php
-}
-?>
-
-<hr>
-<h2>Ajouter un nouvel auteur</h2>
-
-<form action="formauthor.php" method="POST">
-    Nom : <input type="text" name="nom">
-    <input type="submit" value="Valider">
-</form>
-<hr>
-
-
+    <div class="containerbooks">
+        <div class="row">
+            <?php foreach ($author as $oneauthor) { ?>
+                <div class="col-md-3 mb-3">
+                    <div class="card" style="height: 100%;">
+                        <img src="<?= $oneauthor['picture'] ?>" class="card-img-top" style="object-fit: contain; height: 200px; margin-top:15px;">
+                        <div class="card-body text-center">
+                            <h5 class="card-title"><a href="detailauthor.php?id=<?= $oneauthor['idauthor'] ?>"><?= $oneauthor['name'] ?></a></h5>
+                            <p class="card-text">
+                            <div>
+                                <a href="deleteauthor.php?id=<?= $oneauthor['idauthor'] ?>" class="btn btn-outline-secondary">Supprimer</a>
+                                <a href="modifyauthor.php?id=<?= $oneauthor['idauthor'] ?>" class="btn btn-outline-secondary">Modifier</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</body>

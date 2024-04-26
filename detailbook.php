@@ -2,7 +2,7 @@
 
 include "header.php";
 $id = $_GET['id'];
-var_dump($_GET);
+
 
 $pdo = new \PDO('mysql:host=localhost;dbname=library', 'root');
 $statement = $pdo->prepare("SELECT book.*, author.name, category.genre
@@ -18,25 +18,23 @@ $statement->execute();
 
 $book = $statement->fetch(PDO::FETCH_ASSOC);
 
-
-echo "<pre>";
-var_dump($book);
-echo "</pre>";
-
 ?>
+<div class="cardcontainer">
+    <div class="card" style="width: 25rem;">
 
-<h4>Vous avez sélectionné le livre
-    <?= $book['title'] ?>
+        <img src="<?= $book['cover'] ?>" class="card-img-top">
+        <div class="card-body">
+            <h5 class="card-title">Vous avez sélectionné le livre <?= $book['title'] ?>
+                de l'auteur <?= $book['name'] ?> / catégorie
+                <?= $book['genre'] ?></h5><br>
+            <p class="card-text">Synopsis :
+                <?= $book['synopsis'] ?></p><br>
 
-    de l'auteur
-    <?= $book['name'] ?>
+        </div>
+    </div>
+</div>
 
-    / catégorie
-    <?= $book['genre'] ?></h4>
-<br>
 
-<h4>Synopsis :</h4>
-<?= $book['synopsis'] ?><br>
 </body>
 
 </html>
